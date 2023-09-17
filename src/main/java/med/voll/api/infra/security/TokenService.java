@@ -38,19 +38,17 @@ public class TokenService {
         if (token == null){
             throw new RuntimeException();
         }
-        DecodedJWT verifier = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
-            verifier = JWT.require(algorithm)
+            DecodedJWT verifier = JWT.require(algorithm)
                     .withIssuer("Voll Medical")
                     .build()
                     .verify(token);
-            verifier.getSubject();
+            return verifier.getSubject();
             } catch (JWTVerificationException exception) {
             System.out.println(exception.toString());
+            throw new RuntimeException("Token verification failed.", exception);
             }
-
-        return verifier.getSubject();
     }
 
     private Instant tiempoExpiracionToken(){
